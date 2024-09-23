@@ -14,7 +14,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={fonts.merienda.variable}>
-      <link rel="stylesheet" href="page" />
       <body>
         <Providers>{children}</Providers>
       </body>

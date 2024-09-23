@@ -18,7 +18,8 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
-import { handleLoginRedirect } from "./router/LoginHelper";
+import { handleLoginRedirect } from "../router/LoginHelper";
+import { useRouter } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
@@ -49,17 +50,20 @@ export default function WithAction() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Create refs for each section
+  const router = useRouter();
   const rsvpRef = useRef(null);
   const howWeMetRef = useRef(null);
   const photoGalleryRef = useRef(null);
-
+  
   const scrollToSection = (ref: any) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const redirectToLogin = handleLoginRedirect();
+  const handleLoginRoute = () => {
+    router.push('/login');
+  }
 
   return (
     <>
@@ -90,12 +94,11 @@ export default function WithAction() {
           </HStack>
           <Flex alignItems={"center"}>
             <Button
-              onClick={redirectToLogin}
+              onClick={handleLoginRoute}
               variant={"solid"}
               colorScheme={"teal"}
               size={"sm"}
               mr={4}
-              leftIcon={<AddIcon />}
             >
               Login
             </Button>
@@ -110,15 +113,15 @@ export default function WithAction() {
                 <Avatar
                   size={"sm"}
                   src={
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAVxJREFUSEvFldFNw0AQRCedhEoIlQC/UESgiOQXOgEqIZ2EPHRzWp/XiS+SlZOsi+P1zs7O+Halhddq4fyaA7CRdC+Jnetw2r/L/lN+T9Z5DmAt6aMkPUcUwIcCOIqbAtieIt862gfIp6T39p0MoDd5zElRA5AWgLb8dlTehsLkOerSAnzN6PklfEDuHBQBnoqoBMAkW+613UMcznpsCkN0nDawqXtvsbh3gkkRQxUUaKCqRWSAJQmih4Bcs2BDm6keFgMGiEvF9I+KWTtJL5L2kl4bxOyZTVJ1iAwygGNI2hpi6pn//4+PL9lBVaArGNgotJhWpyKPPpYOMWyUVGQLNPBxR3JC3YVqlNiieLhVih0AdmF1UNsi7uNR0WNXsydH1DCdBxaK4Dl6xMPx4mFnFnyRPq49YOJwgSlDiGJ8rKTF3GzgWFuq8+WxybOMVeqHOTO5w0jj0MUB/gBG2loZgDgmxAAAAABJRU5ErkJggg=="
+                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAnJJREFUWEftmDFOHEEQRf+XwKdwYEhw4oQL2CROOQKQQMYJbGGET0BmJ4YjOHUCXIDEiUlgA06BLZX5qAf11HRP9+wMBlm0tNrVzmzP61+/qquXeGKDT4wH/weQmb0CsAngLQB91msW1Na7XsckT4dGYJBCZvYJwN6AhzRg+l3VqAIys3cAvgUlqiZ2N1WDFYHmUKUPeJ9kr1q9QGZ2AkDqTDmOSG7lJswCTayMf35WqSRQ8IzUecixRfLIPyAHdDXCwLWLmJFcKgKZmeqLMupfjE7oOgqZ2bzq3KX2rbIy7SwUTy1KSbGRSY6OSi2ghDrKBhVCVeLcKNaYACew1FxrcUX3QAqVQqZxl56FbULbQ3UVjuaSYs0iW2HzQHHdSWbBFMZyWXxKcq2Z1wPF/lmSF2IAM3sDYB3AdSpl3b1S+iWA7yR/umsKX1NWWj7yQHZPehuLBMw5gIXw/VeSOynFzOwLgO1w7Q+A1RgqhE6L15gb6AOAgwjgN8kXGaAbAIvRtY8kP7sFJhdfHbJEBl6QfJ0B+gVgJbrW8uMQhWJTt9JRk4dQqBRcAtgl+SMD9B7AIYBlFVkfWre4XlPHDVjvrjwm28ysU15yWZZ1/xgA/1u3G+QLYwjLvdkATF6LvBfpsjm1l8Wba3JHHqOWU6ez4BSQSrrM3ZT2ybzkOtC69iOEzbcgxV64pJozsm7vZLG+HNLCttKzBOCKoO/Nh7WwzWSJvrrYajiQ1Dmud2HzHoMEplOpGjJ5IW7I5L2m9/FCFkNfBAqemuKgqIwqHq2rgAJUc55//KN0otKW/mw4U0hrFPFzVys0JKvG3PsMVFLvL1MuODQHHzf4AAAAAElFTkSuQmCC"
                   }
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem >Profile</MenuItem>
+                <MenuItem>Settings</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>Logout</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
@@ -141,13 +144,13 @@ export default function WithAction() {
 
       <Box p={4}>
         <div ref={rsvpRef}>
-          RSVP Section
-          11111111111111111111111111111111111111111111111111111111111111111111111111111111111
-          11111111111111111111111111111111111111111111111111111111111111111111111111111111111
-          11111111111111111111111111111111111111111111111111111111111111111111111111111111111
-          11111111111111111111111111111111111111111111111111111111111111111111111111111111111
+          <h2>RSVP to Our Wedding</h2>
+            <p>Please let us know if you’ll be able to join us on our special day.</p>
         </div>
-        <div ref={howWeMetRef}>How We Met Section</div>
+        <div ref={howWeMetRef}>
+          <h2>How We Met Section</h2>
+            <p>This section will contain information about how we met</p>
+        </div>
         <div ref={photoGalleryRef}>Photo Gallery Section</div>
       </Box>
     </>
