@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, Button, Input, Tooltip, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Tooltip, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter from Next.js
 import { supabase } from "../../../../utils/supabase/client";
-import { InfoIcon, InfoOutlineIcon } from "@chakra-ui/icons";
-
+import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { useAuth } from "@/app/authContext";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ export const LoginForm = () => {
   const [token, setToken] = useState("");
   const [showTokenForm, setShowTokenForm] = useState(false);
   const [message, setMessage] = useState("");
-
+  const { setIsLoggedIn } = useAuth();
 
   // Function to handle sending OTP to user's email
   const handleLogin = async () => {
@@ -37,94 +37,99 @@ export const LoginForm = () => {
     }
   };
 
-  // const handleVerify = async () => {
-  //   try {
-  //     const { data, error } = await supabase.auth.verifyOtp({
-  //       email, // The same email used to request OTP
-  //       token, // The OTP entered by the user
-  //       type: "magiclink", // You can use 'magiclink' or 'signup'
-  //     });
-
-  //     if (error) {
-  //       setMessage(`Error verifying OTP: ${error.message}`);
-  //       console.error(error);
-  //     } else {
-  //       setMessage("OTP verified successfully! You're logged in.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during OTP verification:", error);
-  //   }
-  // };
   const handleVerify = async () => {
-    // Check if the token is the correct one.
-    const otpStored = otpStore[email]; // Assuming you stored the OTP in memory or a DB
-  
-    if (!otpStored) {
-      setMessage("No OTP found for this email. Please request a new OTP.");
-      return;
-    }
-  
-    if (otpStored.otp === token) {
-      // If the OTP is correct, log the user in or handle the login state
-      setMessage("OTP verified successfully! You're logged in.");
-      // Here, you can redirect the user or update the UI
-    } else {
-      setMessage("Invalid OTP. Please try again.");
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email, // The same email used to request OTP
+        token, // The OTP entered by the user
+        type: "email",
+      });
+
+      if (error) {
+        setMessage(`Error verifying OTP: ${error.message}`);
+        console.error(error);
+      } else {
+        setMessage("OTP verified successfully! You're logged in.");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error during OTP verification:", error);
     }
   };
-  
-  
-
 
   if (showTokenForm) {
     return (
-      <VStack marginTop={200}>
-        <Tooltip label="A 6-digit code was sent to your email. Enter this code below and click Verify to be logged in." 
-        aria-label='A tooltip' placement="right-end">
-          Enter the code your received via Email
-        </Tooltip>
-        <Input
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          w={300}
-        
-        />
-        <Button w={150} colorScheme="teal" onClick={handleVerify}>
-          Verify
-        </Button>
-        {message && <Box color="red.500">{message}</Box>}
-        <Button w={150} colorScheme="gray" onClick={() => router.push('/')}>
-        Back to Home
-      </Button>
-      </VStack>
+      <Box alignSelf={"center"} p={20}>
+        <VStack
+          p={20}
+          gap={3}
+          bg={"brand.500"}
+          border={"6px double #CCB7E5"}
+          borderRadius={15}
+        >
+          <Box>
+            Enter the code you received via Email{" "}
+            <Tooltip
+              label="A 6-digit code was sent to your email. Enter this code below and click Verify to be logged in."
+              aria-label="A tooltip"
+              placement="right-end"
+            >
+              <InfoOutlineIcon />
+            </Tooltip>
+          </Box>
+          <Input
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            w={300}
+          />
+          <Button w={150} colorScheme="teal" onClick={handleVerify}>
+            Verify
+          </Button>
+          {message && <Box color="red.500">{message}</Box>}
+          <Button w={150} colorScheme="gray" onClick={() => router.push("/")}>
+            Back to Home
+          </Button>
+        </VStack>
+      </Box>
     );
   }
 
   return (
-    
-    <VStack marginTop={200}>
+    <Box alignSelf={"center"} p={20}>
+      <VStack
+        p={20}
+        gap={3}
+        bg={"brand.500"}
+        border={"6px double #CCB7E5"}
+        borderRadius={15}
+      >
+        <Box>
+          Enter Your Email Address{" "}
+          <Tooltip
+            label="In order to log in, a 6-digit code will be sent to the email you provide below.
+            Enter this code on the next page and you will be logged in."
+            aria-label="Email Tooltip"
+            placement="right-end"
+            fontSize="md"
+          >
+            <InfoOutlineIcon />
+          </Tooltip>
+        </Box>
 
-      <Tooltip label="In order to log in, a 6-digit code will be sent to the email you provide below.
-      Enter this code on the next page and you will be logged in." aria-label='A tooltip' placement="top" fontSize='md'>
-      <InfoOutlineIcon />
-      </Tooltip>
-
-      <Box>
-        Enter Your Email Address
-      </Box>
-      
-      <Input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        w={300}
-        placeholder="Enter your email"
-      />
-      <Button w={150} colorScheme="teal" onClick={handleLogin}>Login</Button>
-      {message && <Box color="red.500">{message}</Box>}
-      <Button w={150} colorScheme="gray" onClick={() => router.push('/')}>
-        Back to Home
-      </Button>
-    </VStack>
-    
+        <Input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          w={300}
+          placeholder="Enter your email"
+        />
+        <Button w={150} colorScheme="teal" onClick={handleLogin}>
+          Login
+        </Button>
+        {message && <Box color="red.500">{message}</Box>}
+        <Button w={150} colorScheme="brand" onClick={() => router.push("/")}>
+          Back to Home
+        </Button>
+      </VStack>
+    </Box>
   );
 };

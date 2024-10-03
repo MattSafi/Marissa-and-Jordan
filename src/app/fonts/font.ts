@@ -1,10 +1,11 @@
-import { Merienda } from "next/font/google";
+import { Allura } from "next/font/google";
 
-const merienda = Merienda({
+const allura = Allura({
   subsets: ["latin"],
-  variable: "--font-merienda",
+  weight: "400",
+  variable: "--font-allura",
 });
 
 export const fonts = {
-  merienda,
+  allura,
 };

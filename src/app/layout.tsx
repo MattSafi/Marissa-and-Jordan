@@ -9,11 +9,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className={fonts.merienda.variable}>
+    <html lang="en" className={fonts.allura.variable}>
+      {" "}
+      {/* Apply the CSS variable here */}
       <body>
         <Providers>{children}</Providers>
       </body>

@@ -1,1 +1,17 @@
+:root {
+  --font-allura: "Allura", cursive; /* Add a fallback font */
+}
 
+body {
+  font-family: var(--font-allura);
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 100%;
+}
