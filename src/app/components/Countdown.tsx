@@ -42,18 +42,20 @@ const CountdownSection: React.FC<CountdownProps> = ({ targetDate }) => {
 
   return (
     <Flex
-      alignItems={"center"}
+      align={"center"}
       direction={"column"}
-      p={8}
-      m={2}
+      py={8}
       marginBottom={20}
-      color={"white"}
-      fontSize={40}
+      color={"#F0F8FF"}
+      fontSize={20}
       fontWeight={600}
+      border={"4px double #F0F8FF"}
+      borderRadius={"4px"}
+      boxShadow={"0 0 2px 3px #F0F8FF"}
+      bg={"#5e56a9"}
     >
-      Please join us for our special day on the 25th of October 2025
       <Flex>
-        <Box w="110px" textAlign="center">
+        <Box w="100px" textAlign="center">
           {timeLeft.days} days
         </Box>{" "}
         :
@@ -62,13 +64,16 @@ const CountdownSection: React.FC<CountdownProps> = ({ targetDate }) => {
         </Box>{" "}
         :
         <Box w="100px" textAlign="center">
-          {timeLeft.minutes}
+          {timeLeft.minutes} min
         </Box>{" "}
         :
-        <Box w="70px" textAlign="center">
-          {timeLeft.seconds}
+        <Box w="100px" textAlign="center">
+          {timeLeft.seconds} sec
         </Box>
       </Flex>
+      <Box px="5px">
+        Please join us for our special day on the 30th of October 2025
+      </Box>
     </Flex>
   );
 };

@@ -36,17 +36,15 @@ interface Props {
 const NavLink = ({ children, onClick }: Props & { onClick?: () => void }) => {
   return (
     <Box
-      bg="brand.100"
-      as="a"
+      as="button"
       px={3}
-      py={2}
+      py={1}
       rounded={"md"}
       _hover={{
         textDecoration: "underline",
-        bg: "brand.500",
+        bg: "brand.100",
       }}
       onClick={onClick}
-      href={"#"}
     >
       {children}
     </Box>
@@ -62,7 +60,7 @@ export default function Page() {
 
   const { isLoggedIn } = useAuth();
 
-  const targetDate = "2025-10-25T09:00:00";
+  const targetDate = "2025-10-30T09:00:00";
 
   // Create refs for each section
 
@@ -86,10 +84,14 @@ export default function Page() {
 
   return (
     <>
-      <Flex justifyContent={"center"}>
-        <img src="images/header.jpg" alt="header" />
-      </Flex>
-      <Box bg="#7553ac" px={4} top={0} position={"sticky"} zIndex={1000}>
+      <Box minHeight={200}></Box>
+      <Box
+        bg="rgba(117, 83, 172, 0.7)"
+        px={4}
+        top={0}
+        position={"sticky"}
+        zIndex={1000}
+      >
         <Flex h={14} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
@@ -107,7 +109,7 @@ export default function Page() {
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
-              <NavLink onClick={() => scrollToSection(dateRef)}>📅Date</NavLink>
+              <NavLink onClick={() => scrollToSection(dateRef)}>Date</NavLink>
               <NavLink onClick={() => scrollToSection(rsvpRef)}>RSVP</NavLink>
               <NavLink onClick={() => scrollToSection(locationRef)}>
                 Location
@@ -137,7 +139,7 @@ export default function Page() {
                   minW={0}
                 >
                   <Box color={"#fff"} fontSize={13} fontWeight={500} py={0.5}>
-                    You're Logged In😁
+                    You're Logged In
                   </Box>
                   <Avatar
                     size={"sm"}
@@ -196,10 +198,10 @@ export default function Page() {
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              <NavLink onClick={() => scrollToSection(dateRef)}>📅Date</NavLink>
-              <NavLink onClick={() => scrollToSection(rsvpRef)}>📝RSVP</NavLink>
+              <NavLink onClick={() => scrollToSection(dateRef)}>Date</NavLink>
+              <NavLink onClick={() => scrollToSection(rsvpRef)}>RSVP</NavLink>
               <NavLink onClick={() => scrollToSection(locationRef)}>
-                🏠Location
+                Location
               </NavLink>
               <NavLink onClick={() => scrollToSection(howWeMetRef)}>
                 How We Met
@@ -218,7 +220,7 @@ export default function Page() {
         ) : null}
       </Box>
 
-      <Flex justifyContent={"center"}>
+      <Flex justifyContent={"center"} marginTop={1}>
         <Box bg="brand.800" p={20}>
           <div ref={dateRef}>
             <CountdownSection targetDate={targetDate} />

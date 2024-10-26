@@ -1,48 +1,83 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
   FormLabel,
   Input,
+  Radio,
+  RadioGroup,
   Stack,
   Textarea,
   VStack,
   Heading,
   Tooltip,
+  Alert,
+  AlertIcon,
+  Spinner,
 } from "@chakra-ui/react";
 import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { supabase } from "../../../utils/supabase/client";
 
 export default function RSVPForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [allergies, setAllergies] = useState("");
-  const [foodOption, setFoodOption] = useState<"meat" | "vegetarian" | "">(""); // Single state for food option
+  const [foodOption, setFoodOption] = useState<"meat" | "vegetarian" | "">("");
   const [anecdote, setAnecdote] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      name,
-      email,
-      foodOption,
-      anecdote,
-    });
-    // Clear form after submission (optional)
-    setName("");
-    setEmail("");
-    setFoodOption("");
-    setAnecdote("");
+    if (loading) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const { error } = await supabase
+        .from("rsvps")
+        .insert([{ name, email, food_option: foodOption, anecdote }]);
+
+      if (error) {
+        setError("There was an error submitting your RSVP.");
+      } else {
+        setSuccess("RSVP submitted successfully!");
+        setName("");
+        setEmail("");
+        setFoodOption("");
+        setAnecdote("");
+      }
+    } catch (err) {
+      console.error("Error inserting data:", err);
+      setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Box maxW="md" p={10} borderWidth="1px" borderRadius="8" bg={"brand.200"}>
+    <Box maxW="md" p={10} borderWidth="1px" borderRadius="8" bg="brand.200">
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
         <Heading as="h2" size="lg" textAlign="center">
           RSVP Form
         </Heading>
+
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert status="success">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
+        {loading && <Spinner size="lg" color="teal.500" />}
 
         <FormControl id="name">
           <FormLabel>Name & Surname</FormLabel>
@@ -51,6 +86,7 @@ export default function RSVPForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your name and surname"
+            required
           />
         </FormControl>
 
@@ -61,50 +97,41 @@ export default function RSVPForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
+            required
           />
         </FormControl>
 
         <FormControl id="food">
           <FormLabel>Food Preference</FormLabel>
-          <Stack spacing={4} direction="row">
-            <Checkbox
-              isChecked={foodOption === "meat"}
-              onChange={() => setFoodOption("meat")}
-            >
-              Meat Option{" "}
-              <Tooltip
-                label="Grilled Steak and Mashed Potatoes."
-                aria-label="A tooltip"
-                placement="top-start"
-              >
-                <InfoOutlineIcon />
-              </Tooltip>
-            </Checkbox>
-
-            <Checkbox
-              isChecked={foodOption === "vegetarian"}
-              onChange={() => setFoodOption("vegetarian")}
-            >
-              Vegetarian Option{" "}
-              <Tooltip
-                label="Roast Vegetable Lasagna."
-                aria-label="A tooltip"
-                placement="top-start"
-              >
-                <InfoOutlineIcon />
-              </Tooltip>
-            </Checkbox>
-          </Stack>
-        </FormControl>
-
-        <FormControl id="allergies">
-          <FormLabel>Allergies </FormLabel>
-          <Textarea
-            value={allergies}
-            onChange={(e) => setAllergies(e.target.value)}
-            placeholder="Please include any allergies you have"
-            resize="vertical"
-          />
+          <RadioGroup
+            value={foodOption}
+            onChange={(value) =>
+              setFoodOption(value as "meat" | "vegetarian" | "")
+            }
+          >
+            <Stack direction="row">
+              <Radio value="meat">
+                Meat Option{" "}
+                <Tooltip
+                  label="Grilled Steak and Mashed Potatoes."
+                  aria-label="Meat option tooltip"
+                  placement="top-start"
+                >
+                  <InfoOutlineIcon />
+                </Tooltip>
+              </Radio>
+              <Radio value="vegetarian">
+                Vegetarian Option{" "}
+                <Tooltip
+                  label="Roast Vegetable Lasagna."
+                  aria-label="Vegetarian option tooltip"
+                  placement="top-start"
+                >
+                  <InfoOutlineIcon />
+                </Tooltip>
+              </Radio>
+            </Stack>
+          </RadioGroup>
         </FormControl>
 
         <FormControl id="anecdote">
@@ -112,7 +139,7 @@ export default function RSVPForm() {
             Cute Anecdote{" "}
             <Tooltip
               label="Please write a short memory involving the couple that stands out to you."
-              aria-label="A tooltip"
+              aria-label="Anecdote tooltip"
               placement="top-start"
             >
               <InfoOutlineIcon />
@@ -126,8 +153,14 @@ export default function RSVPForm() {
           />
         </FormControl>
 
-        <Button type="submit" colorScheme="teal" size="md" width="full">
-          Submit RSVP
+        <Button
+          type="submit"
+          colorScheme="teal"
+          size="md"
+          width="full"
+          isDisabled={loading}
+        >
+          {loading ? <Spinner size="sm" /> : "Submit RSVP"}
         </Button>
       </VStack>
     </Box>

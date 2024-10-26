@@ -19,33 +19,7 @@ export const RSVPSection = () => {
       <Box textAlign={"center"} fontSize={40}>
         RSVP to Our Wedding
       </Box>
-      <Box fontSize={20} textAlign={"start"} margin={8}>
-        <p>
-          &#x2022; We are so excited to celebrate our special day with all of
-          you!
-        </p>
-        <p>
-          &#x2022; Your presence means the world to us, and we would love for
-          you to join us as we begin this new chapter together.
-        </p>
-        <p>
-          &#x2022; Please take a moment to let us know if you will be able to
-          attend by submitting your RSVP below.
-        </p>
-        <p>
-          &#x2022; Kindly note that the deadline for your RSVP is [DEADLINE
-          DATE] so that we can finalize all the details.
-        </p>
-        <p>
-          &#x2022; Simply fill in your information and responses on the RSVP
-          form and click Submit to RSVP.
-        </p>
-        <p>
-          &#x2022; If you have any questions about travel, accommodation, or the
-          schedule of events, feel free to reach out to us directly.
-        </p>
-        <p>&#x2022; We thank you, and we'll see you soon!</p>
-      </Box>
+      <Box fontSize={20} textAlign={"start"} margin={8}></Box>
       <Button
         onClick={routetoRSVPPage}
         w={130}
